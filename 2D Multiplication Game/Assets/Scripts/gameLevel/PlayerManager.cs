@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip shootingClip;
+
     [SerializeField] private Transform cannon;
     [SerializeField] private GameObject[] bulletPrefab;
     [SerializeField] private Transform bulletPosition;
@@ -11,9 +14,18 @@ public class PlayerManager : MonoBehaviour
     float turnSpeed = 5f;
     float bulletBetweenTime = 200f;
     float nextTime;
+
+    public bool canRotate;
+    private void Start()
+    {
+        canRotate = false;
+    }
     void Update()
     {
-        RotateCannon();
+        if (canRotate)
+        {
+            RotateCannon();
+        }
     }
     
     void RotateCannon()
@@ -46,6 +58,11 @@ public class PlayerManager : MonoBehaviour
     void Bullet()
     {
         GameObject bullet = Instantiate(bulletPrefab[Random.Range(0,bulletPrefab.Length)],bulletPosition.position,bulletPosition.rotation) as GameObject;
+        
+        if (PlayerPrefs.GetInt("SoundState") == 1)
+        {
+            audioSource.PlayOneShot(shootingClip);
+        }
     }
    
 }

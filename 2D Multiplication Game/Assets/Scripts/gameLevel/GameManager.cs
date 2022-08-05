@@ -8,14 +8,21 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject startImage;
     [SerializeField] private Text questionText,leftCircleText,middleCircleText,rightCircleText,correctTxt,wrongTxt,scoreTxt;
+    [SerializeField] private GameObject trueImage,falseImage;
     string sceneLayout;
     int correctC,wrongC,scoreC;
     int firstNm;
     int secondNm;
     int result,falseResult1,falseResult2;
-    
+
+    PlayerManager playerManager;
     void Start()
     {
+        trueImage.GetComponent<RectTransform>().localScale = Vector3.zero;
+        falseImage.GetComponent<RectTransform>().localScale = Vector3.zero;
+
+        playerManager = Object.FindObjectOfType<PlayerManager>();
+
         if (PlayerPrefs.HasKey("buttonScene"))
         {
             sceneLayout = PlayerPrefs.GetString("buttonScene");
@@ -37,6 +44,7 @@ public class GameManager : MonoBehaviour
     void StartGame()
     {
         Question();
+        playerManager.canRotate = true;
     }
     
     void Fenn()
@@ -132,13 +140,18 @@ public class GameManager : MonoBehaviour
     }
     public void CheckResult(int textResult)
     {
+        trueImage.GetComponent<RectTransform>().localScale = Vector3.zero;
+        falseImage.GetComponent<RectTransform>().localScale = Vector3.zero;
+
         if (textResult == result)
         {
+            trueImage.GetComponent<RectTransform>().DOScale(1, .1f);
             correctC++;
             scoreC += 20;
         }
         else
         {
+            falseImage.GetComponent<RectTransform>().DOScale(1, .1f);
             wrongC++;
         }
         correctTxt.text = correctC.ToString() + " DOGRU";
